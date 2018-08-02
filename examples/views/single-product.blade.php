@@ -7,11 +7,11 @@
   @endphp
 
   @while(have_posts())
-  @php
-    the_post();
-    do_action('woocommerce_shop_loop');
-    wc_get_template_part('content', 'single-product');
-  @endphp
+    @php
+      the_post();
+      do_action('woocommerce_shop_loop');
+      wc_get_template_part('content', 'single-product');
+    @endphp
   @endwhile
 
   @php
