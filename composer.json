@@ -1,0 +1,17 @@
+{
+    "name": "roots/sage-woocommerce",
+    "description": "WooCommerce integration for Sage 9",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Daniel Mejta",
+            "email": "daniel@mejta.net"
+        }
+    ],
+    "autoload": {
+        "files": [
+            "src/woocommerce.php"
+        ]
+    }
+}
