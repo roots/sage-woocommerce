@@ -23,17 +23,15 @@ if (defined('WC_ABSPATH')) {
         return $template;
     }, PHP_INT_MAX, 1);
 
-    add_filter('wc_get_template', function ($template, $template_name, $args, $template_path) {
+    add_filter('wc_get_template', function ($template, $template_name, $args) {
         $theme_template = locate_template('woocommerce/' . $template_name);
 
         // Don't render template when used in REST
         if ($theme_template && !(defined('REST_REQUEST') && REST_REQUEST)) {
-            do_action('woocommerce_before_template_part', $template_name, $template_path, $theme_template, $args);
             echo template($theme_template, $args);
-            do_action('woocommerce_after_template_part', $template_name, $template_path, $theme_template, $args);
             return get_stylesheet_directory() . '/index.php';
         }
 
         return $theme_template ? template_path($theme_template, $args) : $template;
-    }, PHP_INT_MAX, 4);
+    }, PHP_INT_MAX, 3);
 }
