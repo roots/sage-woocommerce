@@ -16,7 +16,7 @@ if (defined('WC_ABSPATH')) {
         $theme_template = locate_template('woocommerce/' . str_replace(WC_ABSPATH . 'templates/', '', $template));
 
         if ($theme_template) {
-            echo template($theme_template, $data);
+            echo template($theme_template);
             return get_stylesheet_directory() . '/index.php';
         }
 
