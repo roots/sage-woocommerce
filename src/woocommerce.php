@@ -28,7 +28,11 @@ if (defined('WC_ABSPATH')) {
 
         // Don't render template when used in REST
         if ($theme_template && !(defined('REST_REQUEST') && REST_REQUEST)) {
-            echo template($theme_template, $args);
+            $data = collect(get_body_class())->reduce(function ($data, $class) use ($template) {
+                return apply_filters("sage/template/{$class}/data", $data, $template);
+            }, []);
+
+            echo template($theme_template, array_merge($data, $args));
             return get_stylesheet_directory() . '/index.php';
         }
 
