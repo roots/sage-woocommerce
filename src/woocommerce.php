@@ -37,7 +37,12 @@ if (defined('WC_ABSPATH')) {
     add_filter('wc_get_template', function ($template, $template_name, $args) {
         $theme_template = locate_template('woocommerce/' . $template_name);
 
-        // $theme_template already output in woocommerce_before_template_part hook
+        // return theme filename for status screen
+        if (defined('REST_REQUEST') && REST_REQUEST) {
+            return $theme_template ?: $template;
+        }
+
+        // return empty file, output already rendered by 'woocommerce_before_template_part' hook
         return $theme_template ? get_stylesheet_directory() . '/index.php' : $template;
-    }, PHP_INT_MAX, 3);
+    }, 100, 3);
 }
