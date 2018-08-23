@@ -16,22 +16,42 @@ if (defined('WC_ABSPATH')) {
         $theme_template = locate_template('woocommerce/' . str_replace(WC_ABSPATH . 'templates/', '', $template));
 
         if ($theme_template) {
-            echo template($theme_template);
+            $data = collect(get_body_class())->reduce(function ($data, $class) {
+                return apply_filters("sage/template/{$class}/data", $data);
+            }, []);
+
+            echo template($theme_template, $data);
             return get_stylesheet_directory() . '/index.php';
         }
 
         return $template;
     }, PHP_INT_MAX, 1);
 
+    add_action('woocommerce_before_template_part', function($template_name, $template_path, $located, $args) {
+        $theme_template = locate_template('woocommerce/' . $template_name);
+
+        if ($theme_template) {
+            $data = collect(get_body_class())->reduce(function ($data, $class) {
+                return apply_filters("sage/template/{$class}/data", $data);
+            }, []);
+
+            echo template($theme_template, array_merge(
+                compact(explode(' ', 'template_name template_path located args')),
+                $data,
+                $args
+            ));
+        }
+    }, PHP_INT_MAX, 4);
+
     add_filter('wc_get_template', function ($template, $template_name, $args) {
         $theme_template = locate_template('woocommerce/' . $template_name);
 
-        // Don't render template when used in REST
-        if ($theme_template && !(defined('REST_REQUEST') && REST_REQUEST)) {
-            echo template($theme_template, $args);
-            return get_stylesheet_directory() . '/index.php';
+        // return theme filename for status screen
+        if (is_admin() && function_exists('get_current_screen') && get_current_screen()->id === 'woocommerce_page_wc-status') {
+            return $theme_template ?: $template;
         }
 
-        return $theme_template ? template_path($theme_template, $args) : $template;
-    }, PHP_INT_MAX, 3);
+        // return empty file, output already rendered by 'woocommerce_before_template_part' hook
+        return $theme_template ? get_stylesheet_directory() . '/index.php' : $template;
+    }, 100, 3);
 }
