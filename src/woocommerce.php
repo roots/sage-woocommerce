@@ -16,7 +16,11 @@ if (defined('WC_ABSPATH')) {
         $theme_template = locate_template('woocommerce/' . str_replace(WC_ABSPATH . 'templates/', '', $template));
 
         if ($theme_template) {
-            echo template($theme_template);
+            $data = collect(get_body_class())->reduce(function ($data, $class) {
+                return apply_filters("sage/template/{$class}/data", $data);
+            }, []);
+
+            echo template($theme_template, $data);
             return get_stylesheet_directory() . '/index.php';
         }
 
@@ -27,8 +31,13 @@ if (defined('WC_ABSPATH')) {
         $theme_template = locate_template('woocommerce/' . $template_name);
 
         if ($theme_template) {
+            $data = collect(get_body_class())->reduce(function ($data, $class) {
+                return apply_filters("sage/template/{$class}/data", $data);
+            }, []);
+
             echo template($theme_template, array_merge(
                 compact(explode(' ', 'template_name template_path located args')),
+                $data,
                 $args
             ));
         }
@@ -38,7 +47,7 @@ if (defined('WC_ABSPATH')) {
         $theme_template = locate_template('woocommerce/' . $template_name);
 
         // return theme filename for status screen
-        if (defined('REST_REQUEST') && REST_REQUEST) {
+        if (is_admin() && function_exists('get_current_screen') && get_current_screen()->id === 'woocommerce_page_wc-status') {
             return $theme_template ?: $template;
         }
 
