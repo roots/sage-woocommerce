@@ -9,11 +9,11 @@ if (defined('WC_ABSPATH')) {
     add_filter('template_include', function ($template) {
         return strpos($template, WC_ABSPATH) === -1
             ? $template
-            : locate_template('woocommerce/' . str_replace(WC_ABSPATH . 'templates/', '', $template)) ?: $template;
+            : locate_template(WC()->template_path() . str_replace(WC_ABSPATH . 'templates/', '', $template)) ?: $template;
     }, 100, 1);
 
     add_filter('wc_get_template_part', function ($template) {
-        $theme_template = locate_template('woocommerce/' . str_replace(WC_ABSPATH . 'templates/', '', $template));
+        $theme_template = locate_template(WC()->template_path() . str_replace(WC_ABSPATH . 'templates/', '', $template));
 
         if ($theme_template) {
             $data = collect(get_body_class())->reduce(function ($data, $class) {
@@ -28,7 +28,7 @@ if (defined('WC_ABSPATH')) {
     }, PHP_INT_MAX, 1);
 
     add_action('woocommerce_before_template_part', function($template_name, $template_path, $located, $args) {
-        $theme_template = locate_template('woocommerce/' . $template_name);
+        $theme_template = locate_template(WC()->template_path() . $template_name);
 
         if ($theme_template) {
             $data = collect(get_body_class())->reduce(function ($data, $class) {
@@ -44,7 +44,7 @@ if (defined('WC_ABSPATH')) {
     }, PHP_INT_MAX, 4);
 
     add_filter('wc_get_template', function ($template, $template_name, $args) {
-        $theme_template = locate_template('woocommerce/' . $template_name);
+        $theme_template = locate_template(WC()->template_path() . $template_name);
 
         // return theme filename for status screen
         if (is_admin() && function_exists('get_current_screen') && get_current_screen()->id === 'woocommerce_page_wc-status') {
