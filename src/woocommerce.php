@@ -6,11 +6,18 @@ if (defined('WC_ABSPATH')) {
         add_theme_support('woocommerce');
     });
 
-    add_filter('template_include', function ($template) {
+    /**
+     * @param string $template
+     * @return string
+     */
+    function wc_template_loader(String $template)
+    {
         return strpos($template, WC_ABSPATH) === -1
             ? $template
-            : locate_template(WC()->template_path() . str_replace(WC_ABSPATH . 'templates/', '', $template)) ?: $template;
-    }, 100, 1);
+            : locate_template(WC()->template_path() . str_replace(WC_ABSPATH . 'templates/', '', $template)) ? : $template;
+    }
+    add_filter('template_include', __NAMESPACE__ . '\\wc_template_loader', 100, 1);
+    add_filter('comments_template', __NAMESPACE__ . '\\wc_template_loader', 100, 1);
 
     add_filter('wc_get_template_part', function ($template) {
         $theme_template = locate_template(WC()->template_path() . str_replace(WC_ABSPATH . 'templates/', '', $template));
@@ -27,7 +34,7 @@ if (defined('WC_ABSPATH')) {
         return $template;
     }, PHP_INT_MAX, 1);
 
-    add_action('woocommerce_before_template_part', function($template_name, $template_path, $located, $args) {
+    add_action('woocommerce_before_template_part', function ($template_name, $template_path, $located, $args) {
         $theme_template = locate_template(WC()->template_path() . $template_name);
 
         if ($theme_template) {
@@ -48,7 +55,7 @@ if (defined('WC_ABSPATH')) {
 
         // return theme filename for status screen
         if (is_admin() && function_exists('get_current_screen') && get_current_screen()->id === 'woocommerce_page_wc-status') {
-            return $theme_template ?: $template;
+            return $theme_template ? : $template;
         }
 
         // return empty file, output already rendered by 'woocommerce_before_template_part' hook
