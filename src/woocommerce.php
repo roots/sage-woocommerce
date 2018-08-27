@@ -6,11 +6,18 @@ if (defined('WC_ABSPATH')) {
         add_theme_support('woocommerce');
     });
 
-    add_filter('template_include', function ($template) {
+    /**
+     * @param string $template
+     * @return string
+     */
+    function wc_template_loader(String $template)
+    {
         return strpos($template, WC_ABSPATH) === -1
             ? $template
             : locate_template(WC()->template_path() . str_replace(WC_ABSPATH . 'templates/', '', $template)) ? : $template;
-    }, 100, 1);
+    }
+    add_filter('template_include', __NAMESPACE__ . '\\wc_template_loader', 100, 1);
+    add_filter('comments_template', __NAMESPACE__ . '\\wc_template_loader', 100, 1);
 
     add_filter('wc_get_template_part', function ($template) {
         $theme_template = locate_template(WC()->template_path() . str_replace(WC_ABSPATH . 'templates/', '', $template));
