@@ -9,7 +9,7 @@ if (defined('WC_ABSPATH')) {
     add_filter('template_include', function ($template) {
         return strpos($template, WC_ABSPATH) === -1
             ? $template
-            : locate_template(WC()->template_path() . str_replace(WC_ABSPATH . 'templates/', '', $template)) ?: $template;
+            : locate_template(WC()->template_path() . str_replace(WC_ABSPATH . 'templates/', '', $template)) ? : $template;
     }, 100, 1);
 
     add_filter('wc_get_template_part', function ($template) {
@@ -27,7 +27,7 @@ if (defined('WC_ABSPATH')) {
         return $template;
     }, PHP_INT_MAX, 1);
 
-    add_action('woocommerce_before_template_part', function($template_name, $template_path, $located, $args) {
+    add_action('woocommerce_before_template_part', function ($template_name, $template_path, $located, $args) {
         $theme_template = locate_template(WC()->template_path() . $template_name);
 
         if ($theme_template) {
@@ -48,7 +48,7 @@ if (defined('WC_ABSPATH')) {
 
         // return theme filename for status screen
         if (is_admin() && function_exists('get_current_screen') && get_current_screen()->id === 'woocommerce_page_wc-status') {
-            return $theme_template ?: $template;
+            return $theme_template ? : $template;
         }
 
         // return empty file, output already rendered by 'woocommerce_before_template_part' hook
