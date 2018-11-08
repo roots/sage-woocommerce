@@ -54,7 +54,7 @@ if (defined('WC_ABSPATH')) {
         $theme_template = locate_template(WC()->template_path() . $template_name);
 
         // return theme filename for status screen
-        if (is_admin() && ! wp_doing_ajax() && function_exists('get_current_screen') && get_current_screen()->id === 'woocommerce_page_wc-status') {
+        if (is_admin() && ! wp_doing_ajax() && function_exists('get_current_screen') && get_current_screen() && get_current_screen()->id === 'woocommerce_page_wc-status') {
             return $theme_template ? : $template;
         }
 
