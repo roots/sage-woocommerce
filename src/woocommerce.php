@@ -14,7 +14,7 @@ if (defined('WC_ABSPATH')) {
     {
         return strpos($template, WC_ABSPATH) === -1
             ? $template
-            : locate_template(WC()->template_path() . str_replace(WC_ABSPATH . 'templates/', '', $template)) ? : $template;
+            : (locate_template(WC()->template_path() . str_replace(WC_ABSPATH . 'templates/', '', $template)) ? : $template);
     }
     add_filter('template_include', __NAMESPACE__ . '\\wc_template_loader', 100, 1);
     add_filter('comments_template', __NAMESPACE__ . '\\wc_template_loader', 100, 1);
