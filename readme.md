@@ -1,4 +1,4 @@
-# WooCommerce integration for Sage 9 themes
+# WooCommerce integration for Sage 10 themes
 
 This package enables WooCommerce integration with Sage 10 themes and Blade templates.
 
