@@ -11,6 +11,14 @@ cd wp-content/themes/your-sage-theme-folder
 composer require roots/sage-woocommerce
 ```
 
+Add package path to Sage view namespaces in `config/view.php`:
+
+```php
+    'namespaces' => [
+        'SageWoocommerce' => get_theme_file_path('/vendor/roots/sage-woocommerce/src/resources/views'),
+    ],
+```
+
 ## Usage
 
 Create `/resources/views/woocommerce` folder in your theme and place there any template used by WooCommerce with `.blade.php` extension. This template will be loaded instead of a template from the WooCommerce plugin. If you want to replace particular template, please have a look into plugin folder `woocommerce/templates` and use same folder structure and file name (and change the extension to `.blade.php`) as the original template.

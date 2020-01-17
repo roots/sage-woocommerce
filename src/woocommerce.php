@@ -15,15 +15,16 @@ if (defined('WC_ABSPATH')) {
         if (strpos($template, WC_ABSPATH) === -1) {
             return $template;
         }
-        $name = WC()->template_path() . str_replace(WC_ABSPATH . 'templates/', '', $template);
-        return locate_template(app('sage.finder')->locate($name)) ? : $template;
+
+        return locate_template(app('sage.finder')->locate(WC()->template_path() . str_replace(WC_ABSPATH . 'templates/', '', $template))) ? : $template;
     }
     add_filter('template_include', __NAMESPACE__ . '\\wc_template_loader', 90, 1);
     add_filter('comments_template', __NAMESPACE__ . '\\wc_template_loader', 100, 1);
 
     add_filter('wc_get_template_part', function ($template) {
-        $name = WC()->template_path() . str_replace(WC_ABSPATH . 'templates/', '', $template);
-        $theme_template = locate_template(app('sage.finder')->locate($name));
+        $theme_template = locate_template(app('sage.finder')->locate(
+            WC()->template_path() . str_replace(WC_ABSPATH . 'templates/', '', $template)
+        ));
 
         if ($theme_template) {
             $view = app('view.finder')
@@ -43,8 +44,7 @@ if (defined('WC_ABSPATH')) {
     }, PHP_INT_MAX, 1);
 
     add_action('woocommerce_before_template_part', function ($template_name, $template_path, $located, $args) {
-        $name = WC()->template_path() . $template_name;
-        $theme_template = locate_template(app('sage.finder')->locate($name));
+        $theme_template = locate_template(app('sage.finder')->locate(WC()->template_path() . $template_name));
 
         if ($theme_template) {
             $view = app('view.finder')
@@ -66,8 +66,7 @@ if (defined('WC_ABSPATH')) {
     }, PHP_INT_MAX, 4);
 
     add_filter('wc_get_template', function ($template, $template_name, $args) {
-        $name = WC()->template_path() . $template_name;
-        $theme_template = locate_template(app('sage.finder')->locate($name));
+        $theme_template = locate_template(app('sage.finder')->locate(WC()->template_path() . $template_name));
 
         // return theme filename for status screen
         if (is_admin() &&
@@ -79,6 +78,7 @@ if (defined('WC_ABSPATH')) {
         }
 
         // return empty file, output already rendered by 'woocommerce_before_template_part' hook
-        return $theme_template ? get_template_directory() . '/index.php' : $template;
+        return $theme_template ? view('SageWoocommerce::empty')->getPath() : $template;
     }, 100, 3);
 }
+;
