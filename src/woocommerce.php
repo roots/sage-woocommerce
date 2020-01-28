@@ -81,4 +81,3 @@ if (defined('WC_ABSPATH')) {
         return $theme_template ? view('SageWoocommerce::empty')->getPath() : $template;
     }, 100, 3);
 }
-;
