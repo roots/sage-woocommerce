@@ -12,6 +12,10 @@ if (defined('WC_ABSPATH')) {
      */
     function wc_template_loader(String $template)
     {
+        if (strpos($template, get_template_directory()) !== false) {
+            return locate_template(WC()->template_path() . str_replace(get_template_directory() . '/woocommerce/', '', $template)) ? : $template;
+        }
+
         return strpos($template, WC_ABSPATH) === -1
             ? $template
             : (locate_template(WC()->template_path() . str_replace(WC_ABSPATH . 'templates/', '', $template)) ? : $template);
