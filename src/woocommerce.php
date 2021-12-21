@@ -46,6 +46,10 @@ if (defined('WC_ABSPATH')) {
                 return apply_filters("sage/template/{$class}/data", $data);
             }, []);
 
+            if (!is_array($args)) {
+                $args = [$args];
+            }
+
             echo template($theme_template, array_merge(
                 compact(explode(' ', 'template_name template_path located args')),
                 $data,
